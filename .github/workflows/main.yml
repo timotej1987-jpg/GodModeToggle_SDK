@@ -11,11 +11,19 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Download project
+        uses: actions/checkout@v4
+
+      - name: Set up MSBuild
+        uses: microsoft/setup-msbuild@v2
 
       - name: Create ScriptHookV import library
         shell: cmd
-        run: lib /def:ScriptHookV.def /machine:x64 /out:ScriptHookV.lib
+        run: |
+          for /f "delims=" %%i in ('where msbuild') do set "MSBUILD_PATH=%%i"
+          for %%i in ("%MSBUILD_PATH%") do set "MSBUILD_DIR=%%~dpi"
+          call "%MSBUILD_DIR%..\..\Auxiliary\Build\vcvars64.bat"
+          lib /def:ScriptHookV.def /machine:x64 /out:ScriptHookV.lib
 
       - name: Configure
         run: cmake -S . -B build -A x64
