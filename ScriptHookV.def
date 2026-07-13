@@ -1,0 +1,8 @@
+LIBRARY ScriptHookV.dll
+EXPORTS
+    scriptRegister
+    scriptWait
+    keyboardHandlerRegister
+    nativeInit
+    nativePush64
+    nativeCall
